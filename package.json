@@ -1,0 +1,41 @@
+{
+  "name": "antigravity-quota-monitor",
+  "displayName": "Antigravity Quota Monitor",
+  "description": "Exibe quotas de modelos na barra de status",
+  "version": "1.0.0",
+  "publisher": "lamarksribeiro",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "antigravity-quota-monitor.showDetails",
+        "title": "Mostrar Detalhes da Quota"
+      },
+      {
+        "command": "antigravity-quota-monitor.uninstallInfo",
+        "title": "Como desinstalar esta extensão"
+      }
+    ],
+    "configuration": {
+      "title": "Antigravity Quota Monitor",
+      "properties": {
+        "antigravity-quota-monitor.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ativa ou desativa a exibição da quota na barra de status."
+        },
+        "antigravity-quota-monitor.showMultiple": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mostra todos os modelos na barra de status de forma resumida."
+        }
+      }
+    }
+  }
+}
