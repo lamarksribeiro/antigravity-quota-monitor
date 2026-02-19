@@ -165,22 +165,34 @@ async function updateStatusBar() {
 }
 
 async function getQuotaStatus() {
+  console.log("Antigravity Quota Monitor: Tentando obter status real...");
   try {
     const internalStatus = await vscode.commands.executeCommand(
       "antigravity.getUserStatus",
     );
-    if (internalStatus && internalStatus.quotas) {
-      return {
-        isSimulated: false,
-        models: internalStatus.quotas.map((q) => ({
-          name: q.modelName.includes("Claude") ? "Claude" : q.modelName,
-          percent: Math.max(0, 100 - q.usagePercent),
-          expiresIn: q.resetTime,
-        })),
-      };
+    
+    if (internalStatus) {
+      console.log("Antigravity Quota Monitor: Dados recebidos!", JSON.stringify(internalStatus));
+      if (internalStatus.quotas) {
+        return {
+          isSimulated: false,
+          models: internalStatus.quotas.map((q) => ({
+            name: q.modelName.includes("Claude") ? "Claude" : q.modelName,
+            percent: Math.max(0, 100 - q.usagePercent),
+            expiresIn: q.resetTime,
+          })),
+        };
+      } else {
+        console.warn("Antigravity Quota Monitor: Dados recebidos mas campo 'quotas' está ausente.");
+      }
+    } else {
+      console.warn("Antigravity Quota Monitor: Comando retornou null/undefined.");
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error("Antigravity Quota Monitor: Falha ao executar comando interno:", e);
+  }
 
+  console.log("Antigravity Quota Monitor: Usando Modo de Simulação como fallback.");
   return {
     isSimulated: true,
     models: [
