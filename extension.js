@@ -103,7 +103,7 @@ async function updateStatusBar() {
 
     status.models.forEach((m) => {
       const bar = createProgressBar(m.percent);
-      const statusText = m.percent <= 5 ? "⚠️ ESGOTADO" : `${m.percent}%`;
+      const statusText = m.percent <= 5 ? "🛑 ESGOTADO (0%)" : `${m.percent}%`;
       richTooltip.appendMarkdown(`**${m.name}**\n`);
       richTooltip.appendMarkdown(`${bar} **${statusText}**\n`);
       richTooltip.appendMarkdown(`*Reset em: ${formatTime(m.expiresIn)}*\n\n`);
@@ -123,9 +123,10 @@ async function updateStatusBar() {
             : "GF"
           : "C";
 
-        const displayPercent = m.percent <= 5 ? "!" : `${m.percent}%`;
-        item.text = `${getIconForPercent(m.percent)} ${shortName}:${displayPercent}`;
-        if (status.isSimulated) item.text += " (S)";
+        // Melhoria visual: Trocar "!" por "0%" e usar um indicador de simulação mais discreto
+        const displayPercent = m.percent <= 5 ? "0%" : `${m.percent}%`;
+        const simSuffix = status.isSimulated ? " [S]" : "";
+        item.text = `${getIconForPercent(m.percent)} ${shortName}:${displayPercent}${simSuffix}`;
 
         item.color = getColorForPercent(m.percent);
         item.tooltip = richTooltip;
@@ -142,9 +143,9 @@ async function updateStatusBar() {
         1000,
       );
       const displayPercent =
-        lowestModel.percent <= 5 ? "ESGOTADO" : `${lowestModel.percent}%`;
-      item.text = `${getIconForPercent(lowestModel.percent)} Quota: ${displayPercent}`;
-      if (status.isSimulated) item.text += " (SIM)";
+        lowestModel.percent <= 5 ? "0%" : `${lowestModel.percent}%`;
+      const simSuffix = status.isSimulated ? " [SIM]" : "";
+      item.text = `${getIconForPercent(lowestModel.percent)} Quota: ${displayPercent}${simSuffix}`;
 
       item.color = getColorForPercent(lowestModel.percent);
       item.tooltip = richTooltip;
